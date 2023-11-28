@@ -29,4 +29,4 @@ button = st.button('Генерировать')
 # Выводим результат по нажатию кнопки
 if button:
     st.subheader("Вот мой ответ:")
-    st.write(answer(text))
+    st.write(answer(text[0]["generated_text"]))
