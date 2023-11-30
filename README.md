@@ -14,10 +14,10 @@
 2.	Активировать виртуальное окружение:
     source venv/bin/activate
 3.	Запуск приложения:
-3.1 Перейти в program_engineering/PW2/summary_text_app
-    cd program_engineering/PW2/summary_text_app/
-3.2 Запустить приложение:
-    streamlit run summary_text_app.py/
+/3.1 Перейти в program_engineering/PW2/summary_text_app
+    cd program_engineering/PW2/summary_text_app
+/3.2 Запустить приложение:
+    streamlit run summary_text_app.py
 ## Использование
 1.	Необходимо перейти на сайт http://91.185.85.43:8501/;
 2.	Выбрать одну из двух возможных кнопок «Ввод текста» или «Загрузка файла» и нажать кнопку «Генерировать»;
