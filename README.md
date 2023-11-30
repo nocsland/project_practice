@@ -13,9 +13,9 @@
     python3 -m venv venv
 2.	Активировать виртуальное окружение:
     source venv/bin/activate
-3.	Запуск приложения:
+3.	Запуск приложения:/
 3.1 Перейти в program_engineering/PW2/summary_text_app
-    cd program_engineering/PW2/summary_text_app
+    cd program_engineering/PW2/summary_text_app/
 3.2 Запустить приложение:
     streamlit run summary_text_app.py
 ## Использование
