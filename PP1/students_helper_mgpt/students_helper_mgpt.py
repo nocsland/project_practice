@@ -1,10 +1,10 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from transformers import pipeline
 
 model_name = "ai-forever/mGPT"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model = GPT2LMHeadModel.from_pretrained(model_name)
 
 
 # Декоратор @st.cache говорит Streamlit, что модель нужно загрузить только один раз, чтобы избежать утечек памяти
@@ -19,15 +19,14 @@ answer = load_model()
 
 # Выводим заголовок страницы
 st.title("Помощник студента")
-st.write("Приложение поможет найти ответы на ваши вопросы")
+st.write("Приложение поможет продолжить вашу фразу")
 
 # Получаем текст для анализа
-text = st.text_area("Введите запрос")
+text = st.text_area("Введите начальную фразу")
 
 # Создаем кнопку
-button = st.button('Получить ответ')
+button = st.button('Сгенерировать продолжение')
 
 # Выводим результат по нажатию кнопки
 if button:
-    st.subheader("Вот мой ответ:")
     st.write(answer(text)[0]["generated_text"])
