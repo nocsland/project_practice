@@ -19,14 +19,15 @@ answer = load_model()
 
 # Выводим заголовок страницы
 st.title("Помощник студента")
+st.write("Приложение поможет найти ответы на ваши вопросы")
 
 # Получаем текст для анализа
 text = st.text_area("Введите запрос")
 
 # Создаем кнопку
-button = st.button('Генерировать')
+button = st.button('Получить ответ')
 
 # Выводим результат по нажатию кнопки
 if button:
     st.subheader("Вот мой ответ:")
-    st.write(answer(text[0]["generated_text"]))
+    st.write(answer(text)[0]["generated_text"])
