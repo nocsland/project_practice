@@ -1,32 +1,35 @@
 import streamlit as st
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
-from transformers import pipeline
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
 
 model_name = "ai-forever/mGPT"
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
-
-# Декоратор @st.cache говорит Streamlit, что модель нужно загрузить только один раз, чтобы избежать утечек памяти
-@st.cache_resource
-# загружает модель
-def load_model():
-    return pipeline("text-generation", model=model, tokenizer=tokenizer)
-
-
-# Загружаем предварительно обученную модель
-answer = load_model()
-
 # Выводим заголовок страницы
 st.title("Помощник студента")
-st.write("Приложение поможет продолжить вашу фразу")
+st.write("Приложение поможет дополнить фразу")
 
 # Получаем текст для анализа
-text = st.text_area("Введите начальную фразу")
+text = st.text_area("Введите начало фразы")
 
 # Создаем кнопку
-button = st.button('Сгенерировать продолжение')
+button = st.button('Получить ответ')
 
 # Выводим результат по нажатию кнопки
 if button:
-    st.write(answer(text)[0]["generated_text"])
+    input_ids = tokenizer.encode(text, return_tensors="pt")
+    out = model.generate(
+        input_ids, 
+        min_length=80, 
+        max_length=150, 
+        eos_token_id=5, 
+        #pad_token=1,
+        #do_sample=True,
+        top_k=0,
+        top_p=0.8,
+        no_repeat_ngram_size=4
+    )
+    generated_text = list(map(tokenizer.decode, out))[0]
+    st.subheader("Вот мой ответ:")
+    st.write(generated_text)
