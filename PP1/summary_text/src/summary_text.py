@@ -16,7 +16,7 @@ def load_model():
 
 def main():
     # загружаем предварительно обученную модель
-    global text, brevity_level
+    text = ""
     summary_text = load_model()
 
     st.title("Создание краткого резюме")
