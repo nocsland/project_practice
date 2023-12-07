@@ -1,9 +1,6 @@
-import subprocess
-
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
-import pyperclip
 
 
 @st.cache_resource
@@ -19,7 +16,7 @@ def load_model():
 
 def main():
     # загружаем предварительно обученную модель
-    global compression_percent, text, brevity_level
+    global text, brevity_level
     summary_text = load_model()
 
     st.title("Создание краткого резюме")
@@ -31,11 +28,11 @@ def main():
         ["Ввод текста", "Загрузка файла"],
         captions=["Вставить текст из буфера или ввести с клавиатуры", "Загрузить текст из файла формата TXT"],
     )
-
+    # форма ввода текста
     if source_button == "Ввод текста":
         text = st.text_area("Введите текст")
-
     elif source_button == "Загрузка файла":
+
         # форма для загрузки изображения
         uploaded_file = st.file_uploader("Выберите файл", type="txt", accept_multiple_files=False)
 
@@ -44,23 +41,27 @@ def main():
             text = uploaded_file.read().decode()
         else:
             text = ""
-    length = int(len(text.split()))
-    brevity_level = st.slider("\nУровень краткости резюме (10 - кратко, 100 - подробно)", min_value=10, max_value=100,
-                              value=50)
-    create_button = st.button("Создать")
 
+    # выводим слайдер "Уровень краткости резюме"
+    length = int(len(text.split()))
+    brevity_level = st.slider(
+        "\nУровень краткости резюме (10 - кратко, 100 - подробно)",
+        min_value=10,
+        max_value=100,
+        value=50
+    )
+    # выводим кнопку "Создать"
+    create_button = st.button("Создать")
     if create_button and text:
         try:
             # выводим результат
             st.markdown("**Результат:**")
             st.write(
-                summary_text(text, max_length=round(length * 1.5), min_length=round(length * (brevity_level / 100)))[0][
-                    "summary_text"])
-
-
-
-
-
+                summary_text(
+                    text,
+                    max_length=round(length * 1.5),
+                    min_length=round(length * (brevity_level / 100)))[0]["summary_text"]
+            )
         except Exception as e:
             # выводим возникающие ошибки
             st.write(f"Ошибка: {e}")
