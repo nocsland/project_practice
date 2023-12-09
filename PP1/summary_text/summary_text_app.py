@@ -7,11 +7,17 @@ model_name = "csebuetnlp/mT5_multilingual_XLSum"
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name, legasy=False)
 
+
 # Декоратор @st.cache говорит Streamlit, что модель нужно загрузить только один раз, чтобы избежать утечек памяти
 @st.cache_resource
 # загружает модель
 def load_model():
     return pipeline("summarization", model=model, tokenizer=tokenizer)
+
+
+def load_button():
+    return st.button('Генерировать')
+
 
 # Загружаем предварительно обученную модель
 summary_text = load_model()
@@ -24,17 +30,16 @@ if input_type == 'Загрузить файл':
     # Загрузка текста из файла
     uploaded_file = st.file_uploader(" ", type='txt', label_visibility="collapsed")
     if uploaded_file is not None:
-        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        string_data = stringio.read()
-        st.write(string_data)
-        text = string_data
+        text = uploaded_file.read().decode()
+        # st.write(text)
+        text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
     # Создаем кнопку
-    button = st.button('Генерировать')
+    button = load_button()
 elif input_type == 'Ввести текст вручную':
     # Получаем текст для анализа
     text = st.text_area("Введите текст для анализа")
     # Создаем кнопку
-    button = st.button('Генерировать')
+    button = load_button()
 else:
     # Значение переменной button, когда не выбрана ни одна опция
     button = False
