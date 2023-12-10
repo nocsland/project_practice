@@ -24,7 +24,7 @@ def main():
 
     # выбор источника данных
     source_button = st.radio(
-        "\nВыберите источник данных",
+        "Выберите источник данных",
         ["Ввод текста", "Загрузка файла"],
         captions=["Вставить текст из буфера или ввести с клавиатуры", "Загрузить текст из файла формата TXT"],
     )
@@ -45,7 +45,7 @@ def main():
     # выводим слайдер "Уровень краткости резюме"
     length = int(len(text.split()))
     brevity_level = st.slider(
-        "\nУровень краткости резюме (10 - кратко, 100 - подробно)",
+        "Уровень краткости резюме (10 - кратко, 100 - подробно)",
         min_value=10,
         max_value=100,
         value=50
@@ -55,13 +55,13 @@ def main():
     if create_button and text:
         try:
             # выводим результат
-            st.markdown("**Результат:**")
-            st.write(
-                summary_text(
-                    text,
-                    max_length=round(length * 1.5),
-                    min_length=round(length * (brevity_level / 100)))[0]["summary_text"]
-            )
+            with st.spinner('Пожалуйста подождите...'):
+                st.markdown("**Результат:** " +
+                            summary_text(
+                                text,
+                                max_length=round(length * 1.5),
+                                min_length=round(length * (brevity_level / 100)))[0]["summary_text"]
+                            )
         except Exception as e:
             # выводим возникающие ошибки
             st.write(f"Ошибка: {e}")
