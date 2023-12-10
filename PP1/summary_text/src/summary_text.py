@@ -39,6 +39,7 @@ def main():
         if uploaded_file is not None:
             # чтение текста из файла
             text = uploaded_file.read().decode()
+            text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
         else:
             text = ""
 
