@@ -62,7 +62,6 @@ def main():
                                 max_length=round(length * 1.5),
                                 min_length=round(length * (brevity_level / 100)))[0]["summary_text"]
                             )
-            # st.success('Готово')
         except Exception as e:
             # выводим возникающие ошибки
             st.write(f"Ошибка: {e}")
