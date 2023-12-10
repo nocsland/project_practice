@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Скрипт проверит активировано ли виртуальное окружение, в случае необходимости создаст его и установит зависимости
-# Запускать из корневого каталога проекта командой ./PP1/summary_text/run.sh
+# Запускать из каталога, где находится скрипт (summary_text) командой ./run.sh
 
-# Проверяем, находимся ли мы в корневом каталоге проекта
-if [[ "$(basename "$(pwd)")" != "project_practice" ]]; then
-  echo "Скрипт должен быть запущен из корневого каталога проекта"
+# Проверяем, запущен ли скрипт непосредственно из каталога где он расположен
+if [[ "$(basename "$(pwd)")" != "summary_text" ]]; then
+  echo "Скрипт должен быть запущен из каталога, где он расположен (summary_text)"
   exit 1
 fi
 
@@ -20,10 +20,10 @@ if [[ -z "${VIRTUAL_ENV}" ]]; then
    source "$HOME"/.virtualenvs/project_practice/bin/activate
 
    echo "Проверяю и устанавливаю зависимости"
-   pip install -r PP1/summary_text/src/requirements.txt
+   pip install -r src/requirements.txt
 else
    echo "Виртуальное окружение уже активировано"
 fi
 # "Запускаю приложение"
-cd PP1/summary_text/src || exit
+cd src || exit
 streamlit run summary_text.py
