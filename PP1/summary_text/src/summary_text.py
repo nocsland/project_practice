@@ -19,7 +19,7 @@ def main():
     text = ""
     summary_text = load_model()
 
-    st.title("Создание краткого резюме")
+    st.title("Суммаризатор текста")
     st.write("Вы можете использовать текст на любом из 45 языков")
 
     # выбор источника данных
@@ -38,7 +38,7 @@ def main():
 
         if uploaded_file is not None:
             # чтение текста из файла
-            text = uploaded_file.read().decode()
+            text = uploaded_file.read().decode(errors='ignore')
             text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
         else:
             text = ""
@@ -46,7 +46,7 @@ def main():
     # выводим слайдер "Уровень краткости резюме"
     length = int(len(text.split()))
     brevity_level = st.slider(
-        "Уровень краткости резюме (10 - кратко, 100 - подробно)",
+        "Степень краткости (10 - кратко, 100 - подробно)",
         min_value=10,
         max_value=100,
         value=50
