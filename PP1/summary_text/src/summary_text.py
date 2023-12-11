@@ -1,24 +1,25 @@
-from chardet import detect
 import streamlit as st
+from chardet import detect
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
 
 
 @st.cache_resource
-def load_model():
-    # создание объектов модели и токенайзера
+def load_model() -> pipeline:
+    """Load model and return pipeline"""
     model_name = "csebuetnlp/mT5_multilingual_XLSum"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name, legasy=False)
-    # загрузка из кэша pipeline с моделью
     return pipeline("summarization", model=model, tokenizer=tokenizer)
 
 
-def detect_encoding(data: bytes):
+def detect_encoding(data: bytes) -> str:
+    """Return encoding"""
     return detect(data)['encoding']
 
 
-def main():
+def main() -> None:
+    """The application receives the source text, generates a summary based on it and returns it"""
     # загрузка модели
     text = ""
     summary_text = load_model()
@@ -44,11 +45,11 @@ def main():
             encoding = detect_encoding(txt_bytes)
             # декодирование и вывод превью
             text = txt_bytes.decode(encoding=encoding, errors='ignore')
-            text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
+            text = st.text_area(label="Проверьте и при необходимости отредактируйте текст:", value=text)
         else:
             text = ""
+    length = len(text.split())
     # слайдер "Степень краткости резюме"
-    length = int(len(text.split()))
     brevity_level = st.slider(
         "Степень краткости резюме (10 - кратко, 100 - подробно)",
         min_value=10,
