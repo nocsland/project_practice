@@ -1,3 +1,4 @@
+import chardet
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
@@ -9,9 +10,12 @@ def load_model():
     model_name = "csebuetnlp/mT5_multilingual_XLSum"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name, legasy=False)
-
     # загружаем\получаем из кэша объект pipeline с моделью
     return pipeline("summarization", model=model, tokenizer=tokenizer)
+
+
+def detect_encoding(bytes_):
+    return chardet.detect(bytes_)['encoding']
 
 
 def main():
@@ -33,12 +37,15 @@ def main():
         text = st.text_area("Введите текст")
     elif source_button == "Загрузка файла":
 
-        # форма для загрузки изображения
+        # форма для загрузки файла
         uploaded_file = st.file_uploader("Выберите файл", type="txt", accept_multiple_files=False)
 
         if uploaded_file is not None:
+            # Определяем кодировку
+            txt_bytes = uploaded_file.read()
+            encoding = detect_encoding(txt_bytes)
             # чтение текста из файла
-            text = uploaded_file.read().decode(errors='ignore')
+            text = txt_bytes.decode(encoding=encoding, errors='ignore')
             text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
         else:
             text = ""
