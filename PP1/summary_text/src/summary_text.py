@@ -1,27 +1,32 @@
 import streamlit as st
+from chardet import detect
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
 
 
 @st.cache_resource
-def load_model():
-    # создание кэшированных объектов модели и токенайзера
+def load_model() -> pipeline:
+    """Load model and return pipeline"""
     model_name = "csebuetnlp/mT5_multilingual_XLSum"
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name, legasy=False)
-
-    # загружаем\получаем из кэша объект pipeline с моделью
     return pipeline("summarization", model=model, tokenizer=tokenizer)
 
 
-def main():
-    # загружаем предварительно обученную модель
+def detect_encoding(data: bytes) -> str:
+    """Return encoding"""
+    return detect(data)['encoding']
+
+
+def main() -> None:
+    """The application receives the source text, generates a summary based on it and returns it"""
+    # загрузка модели
     text = ""
     summary_text = load_model()
-
-    st.title("Создание краткого резюме")
-    st.write("Вы можете использовать текст на любом из 45 языков")
-
+    # вывод заголовка
+    st.title("Помощник студента")
+    # st.write("Создание резюме из текста. Приложение поддерживает текст на нескольких языках.")
+    st.write("Приложение возвращает краткое содержание текста, поддерживает данные на нескольких языках.")
     # выбор источника данных
     source_button = st.radio(
         "Выберите источник данных",
@@ -32,30 +37,31 @@ def main():
     if source_button == "Ввод текста":
         text = st.text_area("Введите текст")
     elif source_button == "Загрузка файла":
-
-        # форма для загрузки изображения
+        # форма для загрузки файла
         uploaded_file = st.file_uploader("Выберите файл", type="txt", accept_multiple_files=False)
-
         if uploaded_file is not None:
             # чтение текста из файла
-            text = uploaded_file.read().decode()
-            text = st.text_area(label="Проверьте и при необходимости отредактируйте:", value=text)
+            txt_bytes = uploaded_file.read()
+            # определение кодировки
+            encoding = detect_encoding(txt_bytes)
+            # декодирование и вывод превью
+            text = txt_bytes.decode(encoding=encoding, errors='ignore')
+            text = st.text_area(label="Проверьте и при необходимости отредактируйте текст:", value=text)
         else:
             text = ""
-
-    # выводим слайдер "Уровень краткости резюме"
-    length = int(len(text.split()))
+    length = len(text.split())
+    # слайдер "Степень краткости резюме"
     brevity_level = st.slider(
-        "Уровень краткости резюме (10 - кратко, 100 - подробно)",
+        "Степень краткости резюме (10 - кратко, 100 - подробно)",
         min_value=10,
         max_value=100,
         value=50
     )
-    # выводим кнопку "Создать"
+    # кнопка "Создать"
     create_button = st.button("Создать")
     if create_button and text:
         try:
-            # выводим результат
+            # вывод результата
             with st.spinner('Пожалуйста подождите...'):
                 st.markdown("**Результат:** " +
                             summary_text(
@@ -64,10 +70,10 @@ def main():
                                 min_length=round(length * (brevity_level / 100)))[0]["summary_text"]
                             )
         except Exception as e:
-            # выводим возникающие ошибки
+            # вывод ошибок
             st.write(f"Ошибка: {e}")
 
 
 if __name__ == "__main__":
-    # запускаем приложение
+    # запуск приложения
     main()
