@@ -27,7 +27,7 @@ def set_png_as_page_bg(file: str) -> None:
     }
     </style>
     ''' % bin_str
-    
+
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
 
@@ -50,10 +50,10 @@ def main() -> None:
     # загрузка модели
     text = ""
     summary_text = load_model()
-    
+
     # загрузка фона
     set_png_as_page_bg('../static/image.png')
-    
+
     # вывод заголовка
     st.title("Помощник студента")
     st.write("Приложение возвращает краткое содержание текста, поддерживает данные на нескольких языках.")
