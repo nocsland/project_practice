@@ -113,7 +113,7 @@ Full Stack-разработчик – Аркадий Дубовик;
 
 ## Лицензия
 
-Используется открытая модель машинного обучения - https://huggingface.co/csebuetnlp/mT5_multilingual_XLSum.
+MIT License
 
 ## Поддерживаемые языки
 
